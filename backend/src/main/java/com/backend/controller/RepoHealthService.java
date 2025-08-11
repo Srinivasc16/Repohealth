@@ -1,7 +1,9 @@
+package com.backend.controller;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -62,5 +64,29 @@ public class RepoHealthService {
         healthData.put("openIssues", openIssueCount);
 
         return healthData;
+    }
+    public Map<String, Integer> getCommitHistory(String accessToken, String owner, String repo) {
+        LocalDate sinceDate = LocalDate.now().minusDays(30);
+
+        List<Map<String, Object>> commits = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/repos/{owner}/{repo}/commits")
+                        .queryParam("since", sinceDate)
+                        .build(owner, repo))
+                .headers(h -> h.setBearerAuth(accessToken))
+                .retrieve()
+                .bodyToMono(List.class)
+                .block();
+
+        Map<String, Integer> history = new TreeMap<>();
+        if (commits != null) {
+            for (Map<String, Object> commit : commits) {
+                Map<String, Object> commitData = (Map<String, Object>) commit.get("commit");
+                Map<String, Object> committerData = (Map<String, Object>) commitData.get("committer");
+                String date = ((String) committerData.get("date")).substring(0, 10); // yyyy-MM-dd
+                history.merge(date, 1, Integer::sum);
+            }
+        }
+        return history;
     }
 }

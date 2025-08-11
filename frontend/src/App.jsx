@@ -6,6 +6,7 @@ import Dashboard from './Dashboard';
 import Navbar from './Navbar';
 import Features from "./Features.jsx";
 import ScrollToTop from "./Scrolltotop.jsx";
+import Health from "./Health.jsx";
 // Theme Context
 const ThemeContext = React.createContext();
 export default function App() {
@@ -51,6 +52,7 @@ export default function App() {
                         <Route path="/" element={<Home theme={theme} />} />
                         <Route path="/features" element={<Features theme={theme} />} />
                         <Route path="/dashboard" element={<Dashboard theme={theme} />} />
+                        <Route path="/repo/:repoName" element={<Health theme={theme} />} />
                     </Routes>
                 </div>
             </Router>

@@ -5,8 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
@@ -16,12 +15,14 @@ import java.util.Map;
 public class UserController {
 
     private final OAuth2AuthorizedClientService authorizedClientService;
-
     private final WebClient webClient = WebClient.create();
+    private final RepoHealthService repoHealthService;
 
     @Autowired
-    public UserController(OAuth2AuthorizedClientService authorizedClientService) {
+    public UserController(OAuth2AuthorizedClientService authorizedClientService,
+                          RepoHealthService repoHealthService) {
         this.authorizedClientService = authorizedClientService;
+        this.repoHealthService = repoHealthService;
     }
 
     @GetMapping("/user")
@@ -57,5 +58,36 @@ public class UserController {
                 .block();
 
         return repos;
+    }
+
+    // NEW endpoint for a single repo's health
+    @GetMapping("/user/repos/{repo}/health")
+    public Map<String, Object> getSingleRepoHealth(
+            @AuthenticationPrincipal OAuth2User principal,
+            @PathVariable String repo) {
+
+        if (principal == null) {
+            return Map.of();
+        }
+
+        OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient(
+                "github",
+                principal.getName()
+        );
+
+        if (client == null) {
+            return Map.of();
+        }
+
+        String accessToken = client.getAccessToken().getTokenValue();
+        String owner = principal.getAttribute("login"); // GitHub username from OAuth
+
+        Map<String, Object> health = repoHealthService.getRepoHealth(accessToken, owner, repo);
+        Map<String, Integer> history = repoHealthService.getCommitHistory(accessToken, owner, repo);
+
+        return Map.of(
+                "health", health,
+                "history", history
+        );
     }
 }
