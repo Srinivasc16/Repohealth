@@ -130,15 +130,13 @@ const Home = ({ theme }) => {
                         Make data-driven decisions to improve your project's health score.
                     </p>
 
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 hover:cursor-pointer">
                         {/* Primary Button */}
                         <button
                             onClick={() => navigate("/dashboard")}
-                            className="group relative px-8 py-4 bg-orange-600 text-white font-semibold rounded-lg transition-all duration-500 shadow-lg hover:shadow-orange-400/50 transform hover:-translate-y-1 hover:scale-105 overflow-hidden"
+                            className="group relative px-8 py-4 bg-orange-600 text-white font-semibold rounded-lg transition-all duration-500 shadow-lg transform hover:-translate-y-1 hover:scale-103 overflow-hidden"
                         >
                             {/* Glow background */}
-                            <span
-                                className="absolute inset-0 bg-gradient-to-r from-orange-500 via-orange-400 to-orange-600 opacity-0 group-hover:opacity-100 blur-md transition duration-500"></span>
 
                             <span className="flex items-center justify-center space-x-2 relative z-10">
                 <span>Analyze Repository</span>

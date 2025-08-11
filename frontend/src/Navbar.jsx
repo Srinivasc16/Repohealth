@@ -72,7 +72,7 @@ const Navbar = ({ theme, toggleTheme }) => {
     const navbarClasses = `fixed z-50 transition-all duration-700 ease-out ${
         scrolled
             ? "top-0 left-0 w-full rounded-none shadow-2xl"
-            : "top-6 left-1/2 -translate-x-1/2 w-[92%] md:w-[85%] lg:w-[80%] rounded-3xl shadow-xl"
+            : "top-3 left-1/2 -translate-x-1/2 w-[92%] md:w-[85%] lg:w-[80%] rounded-3xl shadow-xl"
     }`;
 
     const containerClasses = `flex justify-between items-center px-6 py-4 border backdrop-blur-xl transition-all duration-700 ease-out ${
@@ -104,7 +104,7 @@ const Navbar = ({ theme, toggleTheme }) => {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center space-x-8">
-                        {['Features', 'Dashboard', 'Pricing'].map((item) => (
+                        {['Features', 'Dashboard'].map((item) => (
                             <Link
                                 key={item}
                                 to={`/${item.toLowerCase()}`}
@@ -267,8 +267,7 @@ const Navbar = ({ theme, toggleTheme }) => {
                     <nav className="flex flex-col space-y-3">
                         {[
                             { name: 'Features', path: '/features' },
-                            { name: 'Dashboard', path: '/dashboard' },
-                            { name: 'Pricing', path: '/pricing' }
+                            { name: 'Dashboard', path: '/dashboard' }
                         ].map((item) => (
                             <Link
                                 key={item.name}
@@ -310,13 +309,14 @@ const Navbar = ({ theme, toggleTheme }) => {
                                     <User className="w-4 h-4" />
                                     <span>View Profile</span>
                                 </a>
-                                <a
-                                    href="http://localhost:8080/logout"
+                                <button
+                                    onClick={handleLogout}
                                     className="px-4 py-3 rounded-xl text-red-500 hover:bg-red-500/10 transition-all duration-200 hover:scale-105 flex items-center space-x-3"
                                 >
-                                    <LogOut className="w-4 h-4" />
+                                    <LogOut className="w-4 h-4"/>
                                     <span>Logout</span>
-                                </a>
+                                </button>
+
                             </div>
                         ) : (
                             <a
